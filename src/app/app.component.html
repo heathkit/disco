@@ -1,3 +1,11 @@
 <md-card>
-  {{title}}
+  <color-picker></color-picker>
+</md-card>
+<md-card>
+  {{picker.color?.red}}
+  {{picker.color?.green}}
+  {{picker.color?.blue}}
+</md-card>
+<md-card>
+  {{picker.luminance}}
 </md-card>
