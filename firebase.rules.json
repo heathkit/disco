@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "disco": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["completed"]
+    }
+  }
+}

@@ -1,5 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, OnInit, AfterViewInit} from '@angular/core';
 import {ColorPickerComponent} from "./color-picker/color-picker.component";
+import {AngularFire, FirebaseObjectObservable} from "angularfire2";
+import {Color} from "./shared/util";
 
 @Component({
   selector: 'app-root',
@@ -7,6 +9,16 @@ import {ColorPickerComponent} from "./color-picker/color-picker.component";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild(ColorPickerComponent) picker;
-  title = 'app works!';
+  lastColor = 'none';
+  item: FirebaseObjectObservable<any>;
+
+  constructor(private af: AngularFire) {
+    this.item = this.af.database.object('/disco/manual');
+  }
+
+  updateColor(c: Color) {
+    this.lastColor = JSON.stringify(c);
+    this.item.update(c);
+  }
+
 }

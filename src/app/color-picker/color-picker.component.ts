@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter} from '@angular/core';
 import {Color} from "../shared/util";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 
 @Component({
   selector: 'color-picker',
@@ -9,7 +9,7 @@ import {Observable} from "rxjs";
 })
 export class ColorPickerComponent implements AfterViewInit {
   context: CanvasRenderingContext2D;
-  color: Color;
+  @Output() colorUpdated = new EventEmitter<Color>();
   luminance: number;
 
   @ViewChild("colorCanvas") colorCanvas;
@@ -26,8 +26,14 @@ export class ColorPickerComponent implements AfterViewInit {
     let mouseMoves = Observable.fromEvent(this.canvas, 'mousemove');
     let mouseUps = Observable.fromEvent(this.canvas, 'mouseup');
 
-    mouseDowns.map(() =>mouseMoves.takeUntil(mouseUps))
-        .concatAll().subscribe(this.getColor.bind(this));
+    mouseDowns.map(() => mouseMoves.takeUntil(mouseUps))
+        .concatAll().map(this.getColor.bind(this)).subscribe();
+  }
+
+  getColor(e) {
+    let data = this.context.getImageData(e.offsetX, e.offsetY, 1, 1).data;
+    let newColor = {red: data[0], green: data[1], blue: data[2]};
+    this.colorUpdated.emit(newColor);
   }
 
   clearCanvas() {
@@ -55,11 +61,6 @@ export class ColorPickerComponent implements AfterViewInit {
     }
   }
 
-  getColor(e) {
-    console.log(e);
-    var data = this.context.getImageData(e.offsetX, e.offsetY, 1, 1).data;
-    this.color = {red: data[0], green: data[1], blue: data[2]};
-  }
 }
 
 function yuv2rgb(y, u, v) {

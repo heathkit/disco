@@ -1,5 +1,16 @@
 # BleLightApp
 
+## TODO
+- write color to firebase
+- read color from firebase in app and write to lamp
+
+## Deploying
+
+- ng build
+- firebase deploy
+
+# Angular CLI infos
+
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.17.
 
 ## Development server
