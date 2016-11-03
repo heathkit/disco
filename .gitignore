@@ -3,14 +3,17 @@
 # compiled output
 /dist
 /tmp
+built
+
+protractor-status-light-00feae863d91.json
 
 # dependencies
-/node_modules
+node_modules
 /bower_components
 
 # IDEs and editors
-/.idea
-/.vscode
+.idea
+.vscode
 .project
 .classpath
 *.launch

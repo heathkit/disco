@@ -38,12 +38,10 @@ bulb.init().then(() => {
   bulb.setDefaultColor({white: 0xaf});
   ref.child('manual').on('value', (snapshot) => {
     console.log('New value:', snapshot.val());
-    bulb.controlLight(snapshot.val());
+    bulb.setDefaultColor(snapshot.val());
   });
-  /*
   Observable.interval(5000)
       .forEach(() => {
         bulb.pulse();
       });
-      */
 });

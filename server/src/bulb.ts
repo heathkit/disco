@@ -18,7 +18,7 @@ function getColorValue(color: Color) {
 }
 
 let connected = false;
-let ready = false;
+let ready = true;
 let colorCharacteristic: noble.Characteristic;
 
 export interface Color { red?: number, green?: number, blue?: number, white?: number, }
@@ -52,6 +52,12 @@ export class Bulb {
               reject(error);
             }
             console.log('connected to peripheral: ' + peripheral.uuid);
+
+            process.on('beforeExit', () => {
+              console.log('disconnecting from bulb')
+              peripheral.disconnect();
+            })
+
             peripheral.discoverServices([SERVICE_ID], (error, services) => {
               let lightService = services[0];
               if (error) {
@@ -77,7 +83,14 @@ export class Bulb {
     if (!colorCharacteristic) {
       throw new Error('Not connected to bulb!');
     }
-    colorCharacteristic.write(new Buffer(getColorValue(color)), true, (error) => {
+    if (!ready) {
+      console.log('skipping write');
+      return;
+    }
+    ready = false;
+    console.log('Setting color');
+    colorCharacteristic.write(new Buffer(getColorValue(color)), false, (error) => {
+      ready = true;
       if (error) {
         console.error(error);
         throw new Error(error);
@@ -93,7 +106,7 @@ export class Bulb {
   // Softly pulse the light with the given color.
   pulse() {
     let duration = 2000;
-    let period = 15;
+    let period = 20;
 
     console.log('Starting pulse');
     let timer = Observable.timer(duration);
@@ -112,9 +125,9 @@ class PulseAnimation implements Observer<TimeInterval<number>> {
   constructor(private bulb: Bulb, private duration: number) {}
 
   next(frame: TimeInterval<number>) {
-    this.elapsed += frame.interval;
     let color = {green: 0xff * pulseFrame(this.elapsed, this.duration)};
     this.bulb.controlLight(color);
+    this.elapsed += frame.interval;
   }
 
   error(err: any) {
