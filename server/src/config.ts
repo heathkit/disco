@@ -1,10 +1,10 @@
 import * as minimist from 'minimist';
 
-export interface Config { help?: boolean, setColor?: string, statusCheck?: string }
+export interface Config { help?: boolean, run?: string, statusCheck?: string }
 
 const opts: minimist.Opts = {
   boolean: ['help'],
-  string: ['setColor', 'statusCheck'],
+  string: ['run', 'statusCheck'],
   alias: {
     help: ['h'],
   },

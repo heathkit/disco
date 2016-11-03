@@ -53,10 +53,10 @@ export class Bulb {
             }
             console.log('connected to peripheral: ' + peripheral.uuid);
 
-            process.on('beforeExit', () => {
+            process.on('cleanup', () => {
               console.log('disconnecting from bulb')
               peripheral.disconnect();
-            })
+            });
 
             peripheral.discoverServices([SERVICE_ID], (error, services) => {
               let lightService = services[0];
@@ -84,11 +84,9 @@ export class Bulb {
       throw new Error('Not connected to bulb!');
     }
     if (!ready) {
-      console.log('skipping write');
       return;
     }
     ready = false;
-    console.log('Setting color');
     colorCharacteristic.write(new Buffer(getColorValue(color)), false, (error) => {
       ready = true;
       if (error) {
@@ -104,7 +102,7 @@ export class Bulb {
   }
 
   // Softly pulse the light with the given color.
-  pulse() {
+  pulse(color: Color) {
     let duration = 2000;
     let period = 20;
 
@@ -112,21 +110,33 @@ export class Bulb {
     let timer = Observable.timer(duration);
 
     Observable.interval(period).timeInterval().takeUntil(timer).subscribe(
-        new PulseAnimation(this, duration));
+        new PulseAnimation(this, color, duration));
   }
 
   // Flicker the given color on briefly, then return to default.
   blip() {}
+
+  police() {
+    Observable.merge(
+      Observable.timer(750),
+      Observable.timer(1500)
+    );
+  }
 }
 
 class PulseAnimation implements Observer<TimeInterval<number>> {
   elapsed = 0;
 
-  constructor(private bulb: Bulb, private duration: number) {}
+  constructor(private bulb: Bulb, private color: Color, private duration: number) {}
 
   next(frame: TimeInterval<number>) {
-    let color = {green: 0xff * pulseFrame(this.elapsed, this.duration)};
-    this.bulb.controlLight(color);
+    let scale = pulseFrame(this.elapsed, this.duration);
+    let newColor = {
+      green: this.color.green * scale,
+      red: this.color.red * scale,
+      blue: this.color.blue * scale
+    };
+    this.bulb.controlLight(newColor);
     this.elapsed += frame.interval;
   }
 
@@ -136,7 +146,10 @@ class PulseAnimation implements Observer<TimeInterval<number>> {
 
   complete() {
     console.log('Done!');
-    this.bulb.controlLight(this.bulb.defaultColor);
+    // Hack because colors will get dropped if we spam them too quickly.
+    setTimeout(() => {
+      this.bulb.controlLight(this.bulb.defaultColor);
+    },100);
   }
 }
 

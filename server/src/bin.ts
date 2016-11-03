@@ -1,8 +1,8 @@
-import {Observable} from '@reactivex/rxjs';
+import {Observable, Subject, Observer} from '@reactivex/rxjs';
 import {database, initializeApp} from 'firebase';
 import * as path from 'path';
 
-import {Bulb} from './bulb';
+import {Bulb, Color} from './bulb';
 import {printHelp, processArgs} from './config';
 import {StatusChecks} from './status-checks';
 
@@ -34,14 +34,33 @@ let ref = db.ref('disco');
 
 let bulb = new Bulb();
 
+let manualColor = new Subject<Color>();
+ref.child('manual').on('value', (snapshot) => {
+  manualColor.next(snapshot.val());
+});
+
 bulb.init().then(() => {
   bulb.setDefaultColor({white: 0xaf});
-  ref.child('manual').on('value', (snapshot) => {
-    console.log('New value:', snapshot.val());
-    bulb.setDefaultColor(snapshot.val());
-  });
-  Observable.interval(5000)
-      .forEach(() => {
-        bulb.pulse();
+  manualColor.throttleTime(20)
+      .subscribe((color) => {
+        console.log('New value:', color);
+        bulb.setDefaultColor(color);
       });
+
+  if (argv.run) {
+    let animations = Observable.interval(5000).take(3);
+
+    animations.subscribe({
+        next: () => {
+          if (argv.run === 'pulse') {
+            bulb.pulse({green: 0xff});
+          } else if (argv.run === 'police') {
+            bulb.police();
+          }
+        },
+        complete: () => {
+          process.exit();
+        }
+    });
+  }
 });
