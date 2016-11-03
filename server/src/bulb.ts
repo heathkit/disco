@@ -1,5 +1,5 @@
+import {Observable, Observer, TimeInterval} from '@reactivex/rxjs';
 import * as noble from 'noble';
-import {Observable, Observer, TimeInterval} from "@reactivex/rxjs";
 
 const NAME = 'LEDBLE-010108CC';
 const ADDR = '20:16:01:01:08:cc';
@@ -21,12 +21,7 @@ let connected = false;
 let ready = false;
 let colorCharacteristic: noble.Characteristic;
 
-export interface Color {
-  red?: number,
-  green?: number,
-  blue?: number,
-  white?: number,
-}
+export interface Color { red?: number, green?: number, blue?: number, white?: number, }
 
 // TODO: Factor animations away from Bulb control.
 export class Bulb {
@@ -34,7 +29,7 @@ export class Bulb {
 
   // Scan for the bulb and connect to it.
   init(): Promise<noble.Characteristic> {
-    noble.on('stateChange', function (state) {
+    noble.on('stateChange', function(state) {
       console.log('New state', state);
       if (state === 'poweredOn') {
         noble.startScanning([SERVICE_ID], true);
@@ -49,7 +44,8 @@ export class Bulb {
           connected = true;
           console.log('Found device with local name: ' + peripheral.advertisement.localName);
           console.log(
-              'advertising the following service uuid\'s: ' + peripheral.advertisement.serviceUuids);
+              'advertising the following service uuid\'s: ' +
+              peripheral.advertisement.serviceUuids);
 
           peripheral.connect((error) => {
             if (error) {
@@ -102,18 +98,12 @@ export class Bulb {
     console.log('Starting pulse');
     let timer = Observable.timer(duration);
 
-    Observable
-      .interval(period)
-      .timeInterval()
-      .takeUntil(timer)
-      .subscribe(new PulseAnimation(this, duration));
+    Observable.interval(period).timeInterval().takeUntil(timer).subscribe(
+        new PulseAnimation(this, duration));
   }
 
   // Flicker the given color on briefly, then return to default.
-  blip() {
-
-
-  }
+  blip() {}
 }
 
 class PulseAnimation implements Observer<TimeInterval<number>> {
@@ -123,9 +113,7 @@ class PulseAnimation implements Observer<TimeInterval<number>> {
 
   next(frame: TimeInterval<number>) {
     this.elapsed += frame.interval;
-    let color = {
-      green: 0xff * pulseFrame(this.elapsed, this.duration)
-    };
+    let color = {green: 0xff * pulseFrame(this.elapsed, this.duration)};
     this.bulb.controlLight(color);
   }
 
@@ -144,11 +132,10 @@ function pulseFrame(elapsed: number, duration: number) {
   let easeIn = require('eases/quint-in');
   let easeOut = require('eases/quint-out');
 
-  let halfTime= duration / 2;
+  let halfTime = duration / 2;
   if (elapsed <= duration / 2) {
     return (easeIn(elapsed / halfTime));
   } else {
     return (1 - easeOut((elapsed - halfTime) / halfTime));
   }
 }
-

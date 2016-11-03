@@ -1,13 +1,7 @@
 
-export interface CheckDescription {
-  id: string,
-  description: string,
-  check: Function
-}
+export interface CheckDescription { id: string, description: string, check: Function }
 
-export interface CheckMap {
-  [id: string]: CheckDescription
-}
+export interface CheckMap { [id: string]: CheckDescription }
 
 export class StatusChecks {
   static checks: CheckMap = {};
@@ -37,7 +31,7 @@ function githubUnhandledIssues() {
 }
 
 StatusChecks.registerCheck({
-  id: "github-unhandled-issues",
-  description: "Fires when there are unlabeled issues in Protractor's issue queue.",
+  id: 'github-unhandled-issues',
+  description: 'Fires when there are unlabeled issues in Protractor\'s issue queue.',
   check: githubUnhandledIssues
 });
