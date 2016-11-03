@@ -1,0 +1,39 @@
+{
+  "name": "disco-server",
+  "version": "1.0.0",
+  "description": "Service that controls BLE lightbulbs",
+  "main": "built/index.js",
+  "bin": "built/bin.js",
+  "scripts": {
+    "clean": "rimraf build",
+    "prebuild": "npm run clean",
+    "format": "./node_modules/.bin/clang-format -i src/**/*.ts",
+    "build": "tsc",
+    "lint": "tslint src/**/*.ts",
+    "test": "jasmine-ts src/**/*_spec.ts",
+    "test:watch": "nodemon -e ts,json jasmine-ts src/**/*_spec.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/firebase": "^2.4.30",
+    "@types/minimist": "^1.1.29",
+    "@types/noble": "0.0.29",
+    "@types/node": "^6.0.46",
+    "@types/request": "0.0.32",
+    "clang-format": "^1.0.45",
+    "jasmine-ts": "0.0.3",
+    "nodemon": "^1.11.0",
+    "rimraf": "^2.5.4",
+    "ts-node": "^1.6.1",
+    "typescript": "^2.0.6"
+  },
+  "dependencies": {
+    "@reactivex/rxjs": "^5.0.0-rc.1",
+    "eases": "^1.0.8",
+    "firebase": "^3.5.2",
+    "minimist": "^1.2.0",
+    "noble": "^1.7.0",
+    "request": "^2.76.0"
+  }
+}

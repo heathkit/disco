@@ -1,8 +1,11 @@
 # BleLightApp
 
 ## TODO
-- write color to firebase
-- read color from firebase in app and write to lamp
+- check that click is within picker 
+- add luminance slider to picker
+- render status checks in app
+
+- render light simulator in app?
 
 ## Deploying
 
