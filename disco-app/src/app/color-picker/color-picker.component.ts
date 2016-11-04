@@ -1,5 +1,4 @@
-import {Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter} from '@angular/core';
-import {Observable, Subject} from "rxjs";
+import {Component, ViewChild, AfterViewInit, Output, EventEmitter} from '@angular/core';
 import {applyCssTransform} from '@angular/material';
 import {Input as HammerInput} from 'hammerjs';
 import {Color} from '../shared/util';
@@ -15,9 +14,12 @@ export class ColorPickerComponent implements AfterViewInit {
 
   // Hue scaled from 0 to 1.
   private normalizedHue: number = 0;
+  private s: number = 0.5;
+  private v: number = 0.5;
 
   @ViewChild("colorCanvas") colorCanvas;
   canvas: HTMLCanvasElement;
+  private canvasDimensions: ClientRect = null;
 
   @ViewChild("colorSlider") colorSlider;
   private sliderDimensions: ClientRect = null;
@@ -25,18 +27,13 @@ export class ColorPickerComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit() {
-    this.canvas = this.colorCanvas.nativeElement;
+    this.canvas = this.colorCanvas.nativeElement.querySelector('.color-canvas');
     this.context = this.canvas.getContext("2d");
     this.drawCanvas();
 
     this.sliderDimensions = this.colorSlider.nativeElement.getBoundingClientRect();
-
-    let mouseDowns = Observable.fromEvent(this.canvas, 'mousedown');
-    let mouseMoves = Observable.fromEvent(this.canvas, 'mousemove');
-    let mouseUps = Observable.fromEvent(this.canvas, 'mouseup');
-
-    mouseDowns.map(() => mouseMoves.takeUntil(mouseUps))
-        .concatAll().map(this.getColor.bind(this)).subscribe();
+    this.canvasDimensions = this.canvas.getBoundingClientRect();
+    this.updateDetailThumb();
   }
 
   getColor(e) {
@@ -86,14 +83,8 @@ export class ColorPickerComponent implements AfterViewInit {
   }
 
   private onHueSlideEnd() {
-    /*
-    this.isSliding = false;
-    this.snapThumbToValue();
-    this._emitValueIfChanged();
-    */
+    //this._emitValueIfChanged();
   }
-
-
 
   updateHueFromPosition(pos: number) {
     let offset = this.sliderDimensions.left;
@@ -103,17 +94,62 @@ export class ColorPickerComponent implements AfterViewInit {
     this.normalizedHue = clamp((pos - offset) / size);
 
     this.drawCanvas();
-    this.updateThumbAndFillPosition(this.normalizedHue, this.sliderDimensions.width);
+    this.updateHueThumbAndFillPosition(this.normalizedHue, this.sliderDimensions.width);
   }
 
-  updateThumbAndFillPosition(percent: number, width: number) {
+  updateHueThumbAndFillPosition(percent: number, width: number) {
     // A container element that is used to avoid overwriting the transform on the thumb itself.
-    let thumbPositionElement =
+    let thumbElement =
         this.colorSlider.nativeElement.querySelector('.color-slider-thumb');
 
     let position = Math.round(percent * width);
 
-    applyCssTransform(thumbPositionElement, `translateX(${position}px)`);
+    let rgb = hsvToRgb(percent,1,1);
+    thumbElement.style.background = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    applyCssTransform(thumbElement, `translateX(${position}px)`);
+    this.updateDetailThumb();
+  }
+
+  private onDetailClick(event: MouseEvent) {
+    this.updateDetailFromPosition(event.clientX, event.clientY);
+  }
+
+  private onDetailSlide(event: HammerInput) {
+    // Prevent the slide from selecting anything else.
+    event.preventDefault();
+    console.log(event.center);
+    this.updateDetailFromPosition(event.center.x, event.center.y);
+  }
+
+  private onDetailSlideStart(event: HammerInput) {
+    console.log(event);
+    event.preventDefault();
+    this.updateDetailFromPosition(event.center.x, event.center.y);
+  }
+
+  private onDetailSlideEnd() {
+    //this._emitValueIfChanged();
+  }
+
+  updateDetailFromPosition(x: number, y: number) {
+    let offsetX = x - this.canvasDimensions.left;
+    let offsetY = y - this.canvasDimensions.top;
+
+    this.s = clamp(offsetX / this.canvasDimensions.width);
+    this.v = clamp(offsetY / this.canvasDimensions.height);
+
+    this.updateDetailThumb();
+  }
+
+  updateDetailThumb() {
+    let thumbElement =
+        this.colorCanvas.nativeElement.querySelector('.color-canvas-thumb');
+
+    let xPos = this.s * this.canvasDimensions.width;
+    let yPos = this.v * this.canvasDimensions.height;
+    let rgb = hsvToRgb(this.normalizedHue,this.s,(1-this.v));
+    thumbElement.style.background = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    applyCssTransform(thumbElement, `translateX(${xPos}px) translateY(${yPos}px)`);
   }
 }
 

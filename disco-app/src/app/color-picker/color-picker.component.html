@@ -1,5 +1,12 @@
 <div class="color-picker-wrapper">
-  <canvas #colorCanvas class="color-picker-canvas"></canvas>
+  <div #colorCanvas class="color-canvas-container"
+    (click)="onDetailClick($event)"
+    (pan)="onDetailSlide($event)"
+    (panstart)="onDetailSlideStart($event)"
+    (panend)="onDetailSlideEnd($event)">
+    <canvas class="color-canvas"></canvas>
+    <div class="color-canvas-thumb"></div>
+  </div>
 
   <div #colorSlider class="color-slider-container"
     (click)="onHueClick($event)"

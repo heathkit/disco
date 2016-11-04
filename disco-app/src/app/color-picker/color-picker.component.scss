@@ -15,6 +15,8 @@ $color-slider-thumb-default-scale: 1;
 $color-canvas-width: 300px;
 $color-canvas-height: 150px;
 
+$color-slider-ease-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
 // Uses a container height and an item height to center an item vertically within the container.
 @function center-vertically($containerHeight, $itemHeight) {
   @return ($containerHeight / 2) - ($itemHeight / 2);
@@ -56,15 +58,43 @@ $color-canvas-height: 150px;
   padding-right: $color-picker-padding;
 }
 
-.color-picker-canvas {
+.color-canvas {
   width: $color-canvas-width;
   height: $color-canvas-height
 }
+
+.color-canvas-container {
+  position: relative;
+}
+
+.color-canvas-thumb {
+  position: absolute;
+  width: $color-slider-thumb-size;
+  height: $color-slider-thumb-size;
+
+  top: (-$color-slider-thumb-size/2);
+  left: (-$color-slider-thumb-size/2);
+  border-radius: max($color-slider-thumb-size, $color-slider-thumb-size);
+  // Separate border properties because, if you combine them into "border", it defaults to 'black'.
+  border-width: 2px;
+  border-style: solid;
+  border-color: white;
+  transition: inherit;
+
+  transition: transform 20ms $color-slider-ease-function;
+  background: white;
+}
+
+.color-canvas-thumb:after {
+  content: '';
+}
+
 
 // Holds the isActive and isSliding classes as well as helps with positioning the children.
 // Cannot be merged with .color-slider-wrapper.
 .color-slider-container {
   position: relative;
+  height: ($color-slider-thumb-size*2);
 }
 
 .color-slider-track-container {
@@ -87,19 +117,20 @@ $color-canvas-height: 150px;
 
   @include slider-thumb-position($color-slider-thumb-size, $color-slider-thumb-size);
   transform: scale($color-slider-thumb-default-scale);
-}
+  transition: transform 100ms $color-slider-ease-function;
 
-.color-slider-thumb::after {
-  content: '';
   position: absolute;
   width: $color-slider-thumb-size;
   height: $color-slider-thumb-size;
   border-radius: max($color-slider-thumb-size, $color-slider-thumb-size);
   // Separate border properties because, if you combine them into "border", it defaults to 'black'.
-  border-width: 2px;
+  border-width: 3px;
   border-style: solid;
   border-color: white;
-  transition: inherit;
 
   background: red;
+}
+
+.color-slider-thumb::after {
+  content: '';
 }
