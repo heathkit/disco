@@ -36,12 +36,6 @@ export class ColorPickerComponent implements AfterViewInit {
     this.updateDetailThumb();
   }
 
-  getColor(e) {
-    let data = this.context.getImageData(e.offsetX, e.offsetY, 1, 1).data;
-    let newColor = {r: data[0], g: data[1], b: data[2]};
-    this.colorUpdated.emit(newColor);
-  }
-
   clearCanvas() {
     this.context.save();
 
@@ -60,7 +54,7 @@ export class ColorPickerComponent implements AfterViewInit {
         let v = y/this.canvas.height;
 
         let rgb = hsvToRgb(this.normalizedHue, s, v);
-        this.context.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+        this.context.fillStyle = `rgb(${rgb.red},${rgb.green},${rgb.blue})`;
         this.context.fillRect(x, this.canvas.height-y, step, step);
       }
     }
@@ -105,7 +99,7 @@ export class ColorPickerComponent implements AfterViewInit {
     let position = Math.round(percent * width);
 
     let rgb = hsvToRgb(percent,1,1);
-    thumbElement.style.background = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    thumbElement.style.background = `rgb(${rgb.red},${rgb.green},${rgb.blue})`;
     applyCssTransform(thumbElement, `translateX(${position}px)`);
     this.updateDetailThumb();
   }
@@ -148,8 +142,9 @@ export class ColorPickerComponent implements AfterViewInit {
     let xPos = this.s * this.canvasDimensions.width;
     let yPos = this.v * this.canvasDimensions.height;
     let rgb = hsvToRgb(this.normalizedHue,this.s,(1-this.v));
-    thumbElement.style.background = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    thumbElement.style.background = `rgb(${rgb.red},${rgb.green},${rgb.blue})`;
     applyCssTransform(thumbElement, `translateX(${xPos}px) translateY(${yPos}px)`);
+    this.colorUpdated.emit(rgb);
   }
 }
 
@@ -167,7 +162,7 @@ function hsvToRgb(h, s, v) {
       g = [t, v, v, q, p, p][mod],
       b = [p, p, t, v, v, q][mod];
 
-  return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+  return { red: Math.round(r * 255), green: Math.round(g * 255), blue: Math.round(b * 255) };
 }
 
 function clamp(n, low = 0, high = 1) {

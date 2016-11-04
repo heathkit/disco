@@ -9,4 +9,14 @@ import {Color} from "./shared/util";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  constructor(public af: AngularFire) {
+  }
+
+  login() {
+    this.af.auth.login();
+  }
+
+  logout() {
+    this.af.auth.logout();
+  }
 }
