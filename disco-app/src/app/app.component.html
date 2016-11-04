@@ -1,10 +1,18 @@
 <md-card>
-    <md-list dense>
-        <md-list-item>
-            <p md-line>An item.</p>
-        </md-list-item>
-    </md-list>
-    Statuses
+  <md-list dense>
+    <h2 md-header>Statuses</h2>
+    <md-list-item *ngFor="let status of statuses">
+        <md-icon md-list-avatar class="status-thumb" svgSrc="/assets/ic_thumb_up.svg"></md-icon>
+        <p md-line>{{status.description}}</p>
+        <md-slide-toggle></md-slide-toggle>
+    </md-list-item>
+
+    <h2 md-header>Alerts</h2>
+    <md-list-item *ngFor="let alert of alerts">
+        <p md-line>{{alert.description}}</p>
+        <button class="status-trigger" md-icon-button md-raised-button><md-icon svgSrc="/assets/ic_play_arrow.svg"></md-icon></button>
+    </md-list-item>
+  </md-list>
 </md-card>
 <md-card>
     <control-panel> </control-panel>

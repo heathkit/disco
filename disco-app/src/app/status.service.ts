@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 
-interface Check {
+export interface Check {
   id: string,
   description: string,
   color?: number,
   silenceUntil?: Date,
 }
 
-interface Status extends Check {
+export interface Status extends Check {
   ok: boolean
 }
 
-interface Alert extends Check {
+export interface Alert extends Check {
   lastFired?: Date
 }
 

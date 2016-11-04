@@ -1,3 +1,16 @@
 md-card {
-    margin: 30px;
+    margin: 25px;
+}
+
+md-list[dense] md-list-item md-icon[md-list-avatar] {
+    height: 25px;
+}
+
+md-icon.status-thumb {
+    fill: green;
+}
+
+button.status-trigger[md-icon-button] {
+    height: 30px;
+    width: 30px;
 }
