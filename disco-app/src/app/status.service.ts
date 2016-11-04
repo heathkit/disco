@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {AngularFire} from "angularfire2";
 
 export interface Check {
   id: string,
@@ -45,7 +46,7 @@ const alerts: Array<Alert> = [
 @Injectable()
 export class StatusService {
 
-  constructor() { }
+  constructor(private af: AngularFire) { }
 
   getAlerts() {
     return alerts;
@@ -53,5 +54,12 @@ export class StatusService {
 
   getStatuses() {
     return statuses;
+  }
+
+  setStatus(id: string, active: boolean) {
+  }
+
+  setAlert(id: string) {
+
   }
 }

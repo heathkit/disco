@@ -3,6 +3,7 @@ import {ColorPickerComponent} from "./color-picker/color-picker.component";
 import {AngularFire, FirebaseObjectObservable} from "angularfire2";
 import {Color} from "./shared/util";
 import {StatusService, Status, Alert} from "./status.service";
+import {MdSlideToggleChange} from "@angular/material";
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,7 @@ export class AppComponent implements OnInit {
   statuses: Array<Status>;
   alerts: Array<Alert>;
 
-  constructor(private af: AngularFire, private statusService: StatusService) {
-  }
+  constructor(private statusService: StatusService) { }
 
   ngOnInit() {
     this.statuses = this.statusService.getStatuses();
@@ -22,11 +22,12 @@ export class AppComponent implements OnInit {
     console.log(this.statuses);
   }
 
-  login() {
-    this.af.auth.login();
+  setStatus(status: Status, event: MdSlideToggleChange) {
+    this.statusService.setStatus(status.id, event.checked);
+    console.log(status, event);
   }
 
-  logout() {
-    this.af.auth.logout();
+  setAlert(alert: Alert) {
+    this.statusService.setAlert(alert.id);
   }
 }

@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Color} from "../shared/util";
 import {FirebaseObjectObservable, AngularFire} from "angularfire2";
 import {DiscoBallComponent} from "../disco-ball/disco-ball.component";
+import {Status} from "../status.service";
 
 @Component({
   selector: 'control-panel',
@@ -32,5 +33,4 @@ export class ControlPanelComponent {
       timestamp: Date.now()
     });
   }
-
 }
