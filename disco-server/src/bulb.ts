@@ -84,6 +84,7 @@ export class Bulb {
       throw new Error('Not connected to bulb!');
     }
     if (!ready) {
+      console.warn('Dropping frame: ', color);
       return;
     }
     ready = false;
@@ -101,11 +102,17 @@ export class Bulb {
     this.controlLight(color);
   }
 
+  animationRunning = false;
+
   // Softly pulse the light with the given color.
   pulse(color: Color) {
     let duration = 2000;
     let period = 20;
 
+    if (this.animationRunning) {
+      return;
+    }
+    this.animationRunning = true;
     console.log('Starting pulse');
     let timer = Observable.timer(duration);
 
@@ -117,6 +124,11 @@ export class Bulb {
   blip(color: Color) {
     let duration = 3000
     let timer = Observable.timer(duration);
+
+    if (this.animationRunning) {
+      return;
+    }
+    this.animationRunning = true;
 
     Observable.interval(1500).takeUntil(timer).subscribe(() => {
       Observable.interval(100).take(6)
@@ -133,11 +145,16 @@ export class Bulb {
         () => {
           setTimeout(() => {
             this.controlLight(this.defaultColor);
+            this.animationRunning = false;
           },100);
         });
   }
 
   police() {
+    if (this.animationRunning) {
+      return;
+    }
+    this.animationRunning = true;
     Observable.interval(250).take(12)
         .subscribe(new PoliceAnimation(this));
   }
@@ -168,6 +185,7 @@ class PoliceAnimation implements Observer<number> {
     // Hack because colors will get dropped if we spam them too quickly.
     setTimeout(() => {
       this.bulb.controlLight(this.bulb.defaultColor);
+      this.bulb.animationRunning = false;
     },100);
   }
 }
@@ -197,6 +215,7 @@ class PulseAnimation implements Observer<TimeInterval<number>> {
     // Hack because colors will get dropped if we spam them too quickly.
     setTimeout(() => {
       this.bulb.controlLight(this.bulb.defaultColor);
+      this.bulb.animationRunning = false;
     },100);
   }
 }
