@@ -39,12 +39,32 @@ ref.child('manual').on('value', (snapshot) => {
   manualColor.next(snapshot.val());
 });
 
+let mostRecentCommand = Date.now();
+let commandStream = new Subject<string>();
+ref.child('command').on('value', (snapshot) => {
+  let val = snapshot.val() as any;
+  if (val.timestamp > mostRecentCommand) {
+    mostRecentCommand = val.timestamp;
+    commandStream.next(val.cmd);
+  }
+});
+
 bulb.init().then(() => {
   bulb.setDefaultColor({white: 0xaf});
   manualColor.throttleTime(20)
       .subscribe((color) => {
         console.log('New value:', color);
         bulb.setDefaultColor(color);
+      });
+
+  commandStream.throttleTime(20)
+      .subscribe((cmd) => {
+        console.log('Got command ', cmd);
+        if(cmd === 'pulse') {
+          bulb.pulse({green: 0xff});
+        } else {
+          bulb.police();
+        }
       });
 
   if (argv.run) {

@@ -117,19 +117,19 @@ export class Bulb {
   blip() {}
 
   police() {
-    Observable.interval(750).take(6)
+    Observable.interval(250).take(12)
         .subscribe(new PoliceAnimation(this));
   }
 }
 
-class PoliceAnimation implements Observer<TimeInterval<number>> {
+class PoliceAnimation implements Observer<number> {
   elapsed = 0;
 
   constructor(private bulb: Bulb) {}
 
-  next(frame: TimeInterval<number>) {
+  next(frame: number) {
     let newColor = { red: 0, green: 0, blue: 0 };
-    if (frame.value % 2 == 0) {
+    if (frame % 2 == 0) {
       newColor.red = 0xff;
     } else {
       newColor.blue = 0xff;

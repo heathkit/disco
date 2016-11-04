@@ -1,4 +1,9 @@
 <div>
   <disco-ball></disco-ball>
   <color-picker (colorUpdated)="updateColor($event)"></color-picker>
+  <div class="command-buttons">
+    <button md-raised-button (click)="setCommand('pulse')">Pulse</button>
+    <button md-raised-button (click)="setCommand('blip')">Blip</button>
+    <button md-raised-button (click)="setCommand('police')">Police</button>
+  </div>
 </div>

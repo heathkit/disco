@@ -24,4 +24,13 @@ export class ControlPanelComponent {
 
     this.item.update(c);
   }
+
+  setCommand(cmd: string) {
+    console.log("Setting command", cmd);
+    this.af.database.object('disco/command').set({
+      cmd: cmd,
+      timestamp: Date.now()
+    });
+  }
+
 }
