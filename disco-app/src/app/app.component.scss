@@ -6,8 +6,8 @@ md-list[dense] md-list-item md-icon[md-list-avatar] {
     height: 25px;
 }
 
-md-icon.status-thumb {
-    fill: green;
+md-icon.status-thumb svg {
+    fill: green !important;
 }
 
 button.status-trigger[md-icon-button] {

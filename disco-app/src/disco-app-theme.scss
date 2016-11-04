@@ -11,6 +11,11 @@ $theme: md-light-theme($primary, $accent);
 
 @include angular-material-theme($theme);
 
+// Styling through the component isn't working for some reason.
+md-icon.status-thumb svg {
+  fill: green !important;
+}
+
 .m2app-dark {
   $dark-primary: md-palette($md-pink, 700, 500, 900);
   $dark-accent:  md-palette($md-blue-grey, A200, A100, A400);
