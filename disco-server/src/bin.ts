@@ -62,6 +62,8 @@ bulb.init().then(() => {
         console.log('Got command ', cmd);
         if(cmd === 'pulse') {
           bulb.pulse({green: 0xff});
+        } else if(cmd === 'blip') {
+            bulb.blip({red: 0xfa, blue: 0xff});
         } else {
           bulb.police();
         }

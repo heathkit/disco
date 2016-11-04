@@ -114,7 +114,28 @@ export class Bulb {
   }
 
   // Flicker the given color on briefly, then return to default.
-  blip() {}
+  blip(color: Color) {
+    let duration = 3000
+    let timer = Observable.timer(duration);
+
+    Observable.interval(1500).takeUntil(timer).subscribe(() => {
+      Observable.interval(100).take(6)
+          .subscribe((i) => {
+            if(i % 3 == 0) {
+              console.log(i, color);
+              this.controlLight(color);
+            } else if(i % 3 == 1) {
+              console.log(this.defaultColor);
+              this.controlLight(this.defaultColor);
+            }
+          });
+    }, (err) => {console.error(err)},
+        () => {
+          setTimeout(() => {
+            this.controlLight(this.defaultColor);
+          },100);
+        });
+  }
 
   police() {
     Observable.interval(250).take(12)
