@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { StatusService } from './status.service';
 import { ControlPanelComponent } from './control-panel/control-panel.component';
+import { DiscoBallComponent } from './disco-ball/disco-ball.component';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyAL1hlM7XMnDbWd6gXhWQ3I75XeaL1KT3o",
@@ -27,7 +28,8 @@ const firebaseAuthConfig = {
   declarations: [
     AppComponent,
     ColorPickerComponent,
-    ControlPanelComponent
+    ControlPanelComponent,
+    DiscoBallComponent
   ],
   imports: [
     BrowserModule,
@@ -41,4 +43,6 @@ const firebaseAuthConfig = {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}

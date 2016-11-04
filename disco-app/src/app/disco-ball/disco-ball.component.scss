@@ -1,0 +1,22 @@
+.disco-ball-container {
+    padding: 0px 30px 30px 30px;
+    position: relative;
+    background: black;
+    width: 150px;
+    border-radius: 15px;
+    margin: 10px;
+}
+
+.disco-ball {
+    width: 150px;
+}
+
+.disco-ball-glow {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    top: 27px;
+    opacity: 0.5;
+    box-shadow: 0px 0px 50px 20px white;
+}

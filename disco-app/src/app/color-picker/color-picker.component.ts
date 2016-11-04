@@ -1,4 +1,4 @@
-import {Component, ViewChild, AfterViewInit, Output, EventEmitter} from '@angular/core';
+import {Component, ViewChild, OnInit, Output, EventEmitter} from '@angular/core';
 import {applyCssTransform} from '@angular/material';
 import {Input as HammerInput} from 'hammerjs';
 import {Color} from '../shared/util';
@@ -8,7 +8,7 @@ import {Color} from '../shared/util';
   templateUrl: './color-picker.component.html',
   styleUrls: ['color-picker.component.scss']
 })
-export class ColorPickerComponent implements AfterViewInit {
+export class ColorPickerComponent implements OnInit {
   context: CanvasRenderingContext2D;
   @Output() colorUpdated = new EventEmitter<Color>();
 
@@ -26,14 +26,13 @@ export class ColorPickerComponent implements AfterViewInit {
 
   constructor() { }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.canvas = this.colorCanvas.nativeElement.querySelector('.color-canvas');
     this.context = this.canvas.getContext("2d");
     this.drawCanvas();
 
     this.sliderDimensions = this.colorSlider.nativeElement.getBoundingClientRect();
     this.canvasDimensions = this.canvas.getBoundingClientRect();
-    this.updateDetailThumb();
   }
 
   clearCanvas() {
@@ -71,7 +70,6 @@ export class ColorPickerComponent implements AfterViewInit {
   }
 
   private onHueSlideStart(event: HammerInput) {
-    console.log(event);
     event.preventDefault();
     this.updateHueFromPosition(event.center.x);
   }
@@ -111,12 +109,10 @@ export class ColorPickerComponent implements AfterViewInit {
   private onDetailSlide(event: HammerInput) {
     // Prevent the slide from selecting anything else.
     event.preventDefault();
-    console.log(event.center);
     this.updateDetailFromPosition(event.center.x, event.center.y);
   }
 
   private onDetailSlideStart(event: HammerInput) {
-    console.log(event);
     event.preventDefault();
     this.updateDetailFromPosition(event.center.x, event.center.y);
   }
@@ -126,6 +122,7 @@ export class ColorPickerComponent implements AfterViewInit {
   }
 
   updateDetailFromPosition(x: number, y: number) {
+    this.canvasDimensions = this.canvas.getBoundingClientRect();
     let offsetX = x - this.canvasDimensions.left;
     let offsetY = y - this.canvasDimensions.top;
 
