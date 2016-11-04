@@ -6,22 +6,27 @@ import {Color} from "../shared/util";
   templateUrl: './disco-ball.component.html',
   styleUrls: ['disco-ball.component.scss']
 })
-export class DiscoBallComponent {
+export class DiscoBallComponent implements OnInit {
 
   @ViewChild("discoBall") discoBall;
+  discoGlowElement: HTMLElement;
 
   private _color: Color;
 
-  constructor() { }
+  constructor() {
+  }
+
+  ngOnInit() {
+    this.discoGlowElement = this.discoBall.nativeElement.querySelector(".disco-ball-glow");
+  }
 
   setColor(rgb: Color) {
     let color = rgb.blue;
-    console.log(rgb);
     color += rgb.green << 8;
     color += rgb.red << 16;
-    let glow = this.discoBall.nativeElement.querySelector(".disco-ball-glow");
-    glow.style.background = `#${color.toString(16)}`;
-    glow.style.boxShadow = `0px 0px 50px 20px #${color.toString(16)}`;
+    console.log(color.toString(16));
+    this.discoGlowElement.style.background = `#${color.toString(16)}`;
+    this.discoGlowElement.style.boxShadow = `0px 0px 50px 20px #${color.toString(16)}`;
     this._color = rgb;
   }
 

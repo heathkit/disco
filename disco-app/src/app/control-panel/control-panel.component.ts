@@ -19,8 +19,9 @@ export class ControlPanelComponent {
   }
 
   updateColor(c: Color) {
+    // TODO hook in the disco ball using the engine.
     this.discoBall.setColor(c);
-    console.log("updateColor", c);
+
     this.item.update(c);
   }
 }
