@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
-
 interface Check {
   id: string,
   description: string,

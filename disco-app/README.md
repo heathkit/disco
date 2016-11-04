@@ -1,11 +1,13 @@
 # BleLightApp
 
 ## TODO
-- check that click is within picker 
-- add luminance slider to picker
-- render status checks in app
+- add status checks and triggers
+- factor out engine and add simulator to app
+- add status blinks to engine
+- add pulses to engine
 
-- render light simulator in app?
+- use tabs to select white or color
+- add authentication to app
 
 ## Deploying
 

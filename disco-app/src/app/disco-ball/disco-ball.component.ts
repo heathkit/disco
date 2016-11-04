@@ -24,7 +24,6 @@ export class DiscoBallComponent implements OnInit {
     let color = rgb.blue;
     color += rgb.green << 8;
     color += rgb.red << 16;
-    console.log(color.toString(16));
     this.discoGlowElement.style.background = `#${color.toString(16)}`;
     this.discoGlowElement.style.boxShadow = `0px 0px 50px 20px #${color.toString(16)}`;
     this._color = rgb;

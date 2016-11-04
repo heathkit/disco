@@ -117,10 +117,37 @@ export class Bulb {
   blip() {}
 
   police() {
-    Observable.merge(
-      Observable.timer(750),
-      Observable.timer(1500)
-    );
+    Observable.interval(750).take(6)
+        .subscribe(new PoliceAnimation(this));
+  }
+}
+
+class PoliceAnimation implements Observer<TimeInterval<number>> {
+  elapsed = 0;
+
+  constructor(private bulb: Bulb) {}
+
+  next(frame: TimeInterval<number>) {
+    let newColor = { red: 0, green: 0, blue: 0 };
+    if (frame.value % 2 == 0) {
+      newColor.red = 0xff;
+    } else {
+      newColor.blue = 0xff;
+    }
+
+    this.bulb.controlLight(newColor);
+  }
+
+  error(err: any) {
+    console.error(err);
+  }
+
+  complete() {
+    console.log('Done!');
+    // Hack because colors will get dropped if we spam them too quickly.
+    setTimeout(() => {
+      this.bulb.controlLight(this.bulb.defaultColor);
+    },100);
   }
 }
 

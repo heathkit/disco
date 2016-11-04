@@ -1,8 +1,8 @@
 # TODO
 
-- firebase control app
-- server connects to firebase
-- manually control light
+- slider picks hue value
+- canvas updates as hue changes
+- canvas thumb control to pick sv
 
 - server polls travis.io and circleci?
 
