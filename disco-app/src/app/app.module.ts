@@ -7,6 +7,8 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { StatusService } from './status.service';
+import { ControlPanelComponent } from './control-panel/control-panel.component';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyAL1hlM7XMnDbWd6gXhWQ3I75XeaL1KT3o",
@@ -19,7 +21,8 @@ export const firebaseConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    ColorPickerComponent
+    ColorPickerComponent,
+    ControlPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,9 @@ export const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig),
     MaterialModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    StatusService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

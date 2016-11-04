@@ -22,14 +22,17 @@
     "@angular/platform-browser-dynamic": "~2.0.0",
     "@angular/router": "~3.0.0",
     "angularfire2": "^2.0.0-beta.6",
+    "color": "^0.11.4",
     "core-js": "^2.4.1",
     "firebase": "^3.5.3",
+    "hammerjs": "^4.3.1",
     "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.6.23"
   },
   "devDependencies": {
     "@types/jasmine": "^2.2.30",
+    "@types/hammerjs": "^2.0.33",
     "@types/node": "^6.0.42",
     "angular-cli": "1.0.0-beta.17",
     "codelyzer": "~0.0.26",

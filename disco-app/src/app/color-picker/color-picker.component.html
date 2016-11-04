@@ -1,1 +1,17 @@
-<canvas #colorCanvas width="400" height="400" id="cv"></canvas>
+<div class="color-picker-wrapper">
+  <canvas #colorCanvas class="color-picker-canvas"></canvas>
+
+  <div #colorSlider class="color-slider-container"
+    (click)="onHueClick($event)"
+    (slide)="onHueSlide($event)"
+    (slidestart)="onHueSlideStart($event)"
+    (slideend)="onHueSlideEnd($event)">
+    <div class="color-slider-track-container">
+      <div class="color-slider-track"></div>
+    </div>
+    <div class="color-slider-thumb-container">
+      <div class="color-slider-thumb"></div>
+    </div>
+  </div>
+</div>
+

@@ -9,16 +9,4 @@ import {Color} from "./shared/util";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  lastColor = 'none';
-  item: FirebaseObjectObservable<any>;
-
-  constructor(private af: AngularFire) {
-    this.item = this.af.database.object('/disco/manual');
-  }
-
-  updateColor(c: Color) {
-    this.lastColor = JSON.stringify(c);
-    this.item.update(c);
-  }
-
 }

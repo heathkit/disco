@@ -1,0 +1,105 @@
+@import '../../transitions';
+
+$color-picker-padding: 8px !default;
+
+// This refers to the thickness of the slider. On a horizontal slider this is the height, on a
+// vertical slider this is the width.
+$color-slider-thickness: 48px !default;
+$color-slider-min-size: 128px !default;
+$color-slider-padding: 8px !default;
+
+$color-slider-track-height: 8px!default;
+$color-slider-thumb-size: 25px !default;
+$color-slider-thumb-default-scale: 1;
+
+$color-canvas-width: 300px;
+$color-canvas-height: 150px;
+
+// Uses a container height and an item height to center an item vertically within the container.
+@function center-vertically($containerHeight, $itemHeight) {
+  @return ($containerHeight / 2) - ($itemHeight / 2);
+}
+
+// Positions the thumb based on its width and height.
+@mixin slider-thumb-position($width: $color-slider-thumb-size, $height: $color-slider-thumb-size) {
+  position: absolute;
+  top: center-vertically($color-slider-thickness, $height);
+  // This makes it so that the center of the thumb aligns with where the click was.
+  // This is not affected by the movement of the thumb.
+  left: (-$width / 2);
+  width: $width;
+  height: $height;
+  border-radius: max($width, $height);
+}
+
+:host {
+  height: ($color-slider-thickness + $color-canvas-height);
+  min-width: 200px;
+  position: relative;
+  padding: 0;
+  display: inline-block;
+  outline: none;
+  vertical-align: middle;
+}
+
+:host *,
+:host *::after {
+  box-sizing: border-box;
+}
+
+// Exists in order to pad the slider and keep everything positioned correctly.
+// Cannot be merged with the .color-slider-container.
+.color-picker-wrapper {
+  width: 100%;
+  height: 100%;
+  padding-left: $color-picker-padding;
+  padding-right: $color-picker-padding;
+}
+
+.color-picker-canvas {
+  width: $color-canvas-width;
+  height: $color-canvas-height
+}
+
+// Holds the isActive and isSliding classes as well as helps with positioning the children.
+// Cannot be merged with .color-slider-wrapper.
+.color-slider-container {
+  position: relative;
+}
+
+.color-slider-track-container {
+  width: 100%;
+  position: absolute;
+  top: center-vertically($color-slider-thickness, $color-slider-track-height);
+  height: $color-slider-track-height;
+}
+
+.color-slider-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to right,hsl(0,100%,50%),hsl(60,100%,50%),hsl(120,100%,50%),hsl(180,100%,50%),hsl(240,100%,50%),hsl(300,100%,50%),hsl(360,100%,50%))
+}
+
+.color-slider-thumb {
+  z-index: 1;
+
+  @include slider-thumb-position($color-slider-thumb-size, $color-slider-thumb-size);
+  transform: scale($color-slider-thumb-default-scale);
+}
+
+.color-slider-thumb::after {
+  content: '';
+  position: absolute;
+  width: $color-slider-thumb-size;
+  height: $color-slider-thumb-size;
+  border-radius: max($color-slider-thumb-size, $color-slider-thumb-size);
+  // Separate border properties because, if you combine them into "border", it defaults to 'black'.
+  border-width: 2px;
+  border-style: solid;
+  border-color: white;
+  transition: inherit;
+
+  background: red;
+}
